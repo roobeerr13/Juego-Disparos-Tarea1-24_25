@@ -12,15 +12,24 @@ class Player(Character):
         dead_image_path = 'assets/bueno_muerto.png'
         super().__init__(game, width, height, x, y, speed, image_path, dead_image_path)
         self.lives = 3
+        self.score = 0
 
-    def update(self, keys):
+    def move(self, keys):
         if not self.dead:
             if keys[pygame.K_LEFT] and self.x > 0:
                 self.x -= self.speed
             if keys[pygame.K_RIGHT] and self.x < self.game.width - self.width:
                 self.x += self.speed
-            if keys[pygame.K_SPACE]:
-                self.game.shoot(self)
+            self.rect.topleft = (self.x, self.y)  # Actualizamos el rectángulo
+
+    def shoot(self):
+        if not self.dead:
+            self.game.shoot(self)
+
+    def update(self, keys):
+        self.move(keys)
+        if keys[pygame.K_SPACE]:
+            self.shoot()
 
     def die(self):
         super().die()
@@ -30,6 +39,7 @@ class Player(Character):
         else:
             self.x = self.game.width // 2 - self.width // 2
             self.y = self.game.height - self.height
-        
+            self.rect.topleft = (self.x, self.y)
+
     def __str__(self):
-        return super().__str__() + ' (PLAYER)'
+        return super().__str__() + f' (PLAYER, Score: {self.score})'

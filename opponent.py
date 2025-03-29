@@ -11,16 +11,25 @@ class Opponent(Character):
         image_path = 'assets/malo.png'
         dead_image_path = 'assets/malo_muerto.png'
         super().__init__(game, width, height, x, y, speed, image_path, dead_image_path)
+        self.is_star = False 
 
-    def update(self):
+    def move(self):
         if not self.dead:
             self.y += self.speed
             if self.y > self.game.height:
-                self.y = 0
+                self.y = 0 
+            self.rect.topleft = (self.x, self.y)
+
+    def shoot(self):
+        if not self.dead:
+            print(f"{self} disparó un proyectil.")
+
+    def update(self):
+        self.move()
 
     def die(self):
         super().die()
-        self.game.score += 1
+        self.game.score += 1 
 
     def __str__(self):
         return super().__str__() + ' (OPPONENT)'
