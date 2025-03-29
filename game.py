@@ -36,7 +36,7 @@ class Game:
         self.opponent.update()
 
     def render(self):
-        self.screen.fill((0, 0, 0))
-        self.player.render()
-        self.opponent.render()
-        pygame.display.flip()
+        self.screen.fill((0, 0, 0))  # Llena la pantalla con negro
+        self.player.render()  # Dibuja al jugador
+        self.opponent.render()  # Dibuja al oponente
+        pygame.display.flip()  # Actualiza la pantalla

@@ -3,10 +3,11 @@ import pygame
 from game import Game
 
 def main():
-    print("Directorio de trabajo actual:", os.getcwd())  # Verifica el directorio de trabajo
+    os.environ["SDL_AUDIODRIVER"] = "dummy"  # Deshabilita el audio
     pygame.init()
     game = Game()
     game.run()
 
 if __name__ == "__main__":
     main()
+
