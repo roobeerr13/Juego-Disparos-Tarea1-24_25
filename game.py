@@ -1,34 +1,18 @@
 import pygame
-import os
-from player import Player
-from opponent import Opponent
 
 class Game:
     def __init__(self):
-        self.width = 800
-        self.height = 600
-        self.screen = pygame.display.set_mode((self.width, self.height))
-        self.clock = pygame.time.Clock()
-        self.is_running = True
-        self.player = Player(self)
-        self.opponent = Opponent(self)
-        self.player_shots = []
-        self.opponent_shots = []
-        self.score = 0
-        self.ended = False
-        self.font = pygame.font.Font(None, 36)
+        self.running = True  # Asegúrate de definir este atributo
+        self.screen = pygame.display.set_mode((800, 600))
+        pygame.display.set_caption("Juego de Disparos")
 
     def run(self):
-        while self.is_running:
+        while self.running:  # Usa el atributo definido
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.is_running = False
-
-            keys = pygame.key.get_pressed()
-            self.update(keys)
-            self.render()
-            self.clock.tick(60)
-
+                    self.running = False
+            self.screen.fill((0, 0, 0))  # Pinta la pantalla de negro
+            pygame.display.flip()
         pygame.quit()
 
     def update(self, keys):
