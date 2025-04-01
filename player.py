@@ -14,17 +14,17 @@ class Player(Character):
         self.lives = 3  # Número de vidas
         self.score = 0  # Puntuación inicial
 
-def update(self, keys, mouse_pressed):
-    self.move(keys)  # Mueve al jugador según las teclas presionadas
-    if keys[pygame.K_SPACE] or mouse_pressed[0]:  # Dispara con barra espaciadora o clic izquierdo
-        self.shoot()
+    def update(self, keys, mouse_pressed):
+        self.move(keys)  # Mueve al jugador según las teclas presionadas
+        if keys[pygame.K_SPACE] or mouse_pressed[0]:  # Dispara con barra espaciadora o clic izquierdo
+            self.shoot()
 
-def move(self, keys):
-    if keys[pygame.K_a] and self.x > 0:  # Mover a la izquierda con 'A'
-        self.x -= self.speed
-    if keys[pygame.K_d] and self.x < self.game.width - self.width:  # Mover a la derecha con 'D'
-        self.x += self.speed
-    self.rect.topleft = (self.x, self.y)  # Actualiza el rectángulo de colisión
+    def move(self, keys):
+        if keys[pygame.K_a] and self.x > 0:  # Mover a la izquierda con 'A'
+            self.x -= self.speed
+        if keys[pygame.K_d] and self.x < self.game.width - self.width:  # Mover a la derecha con 'D'
+            self.x += self.speed
+        self.rect.topleft = (self.x, self.y)  # Actualiza el rectángulo de colisión
 
     def shoot(self):
         from shot import Shot  # Importación aquí para evitar dependencias circulares
