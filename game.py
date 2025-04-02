@@ -43,7 +43,7 @@ class Game:
                 shot.update()
             for shot in self.opponent_shots:
                 shot.update()
-            self.check_collisions()
+            self.check_collisions()  # Llama al método check_collisions()
 
     def render(self):
         self.screen.fill((135, 206, 235))  # Fondo azul claro
@@ -51,4 +51,62 @@ class Game:
         lives_text = self.font.render(f'Lives: {max(self.player.lives, 0)}', True, (255, 255, 255))  # Evita valores negativos
         self.screen.blit(score_text, (10, 10))
         self.screen.blit(lives_text, (10, 50))
-        self.player.render_invulnerability_timer()  #
+        self.player.render_invulnerability_timer()  # Muestra el temporizador de invulnerabilidad
+        self.player.render()
+        self.opponent.render()
+        for shot in self.player_shots:
+            shot.render()
+        for shot in self.opponent_shots:
+            shot.render()
+        pygame.display.flip()
+
+    def check_collisions(self):
+        # Verifica si el jugador colisiona con el oponente
+        if self.player.collide(self.opponent):
+            self.player.collide_with_opponent()
+        if self.opponent.collide(self.player):
+            self.opponent.collide_with_player()
+
+        # Verifica si los disparos del jugador golpean al oponente
+        for shot in self.player_shots:
+            if shot.hit_target(self.opponent):
+                self.opponent.die()
+                self.player_shots.remove(shot)
+                self.score += 1  # Incrementa la puntuación
+                self.spawn_new_opponent()  # Genera un nuevo oponente
+
+        # Verifica si los disparos del oponente golpean al jugador
+        for shot in self.opponent_shots:
+            if shot.hit_target(self.player) and not self.player.invulnerable:  # Respeta la invulnerabilidad
+                self.player.die()
+                self.opponent_shots.remove(shot)
+
+    def spawn_new_opponent(self):
+        x = random.randint(0, self.width - 50)  
+        y = 0 
+        self.opponent = Opponent(self)
+        self.opponent.x = x
+        self.opponent.y = y
+        self.opponent.rect.topleft = (x, y)
+
+    def remove_opponent(self):
+        if isinstance(self.opponent, Boss):
+            self.end_game(won=True)
+        else:
+            self.opponent = Boss(self)
+
+    def end_game(self, won=False):
+        self.ended = True
+        if won:
+            game_over_image = pygame.image.load('assets/you_win.png')
+        else:
+            game_over_image = pygame.image.load('assets/game_over.png')
+        
+        # Muestra la imagen de fin del juego
+        self.screen.fill((0, 0, 0))  # Fondo negro
+        self.screen.blit(game_over_image, (self.width // 4, self.height // 4))
+        pygame.display.flip()
+        
+        # Espera 3 segundos antes de cerrar
+        pygame.time.wait(3000)
+        self.is_running = False
