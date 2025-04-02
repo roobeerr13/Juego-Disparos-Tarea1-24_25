@@ -43,7 +43,9 @@ class Player(Character):
         if not self.invulnerable:  # Solo reduce vidas si no es invulnerable
             if self.lives > 0:
                 self.lives -= 1
+                print(f"Vidas restantes: {self.lives}")  # Mensaje de depuración
             if self.lives == 0:
+                print("Fin del juego: el jugador ha perdido todas las vidas.")  # Mensaje de depuración
                 self.game.end_game(won=False)  # Termina el juego si las vidas llegan a 0
             else:
                 self.dead = True

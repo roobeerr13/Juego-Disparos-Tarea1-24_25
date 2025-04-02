@@ -70,7 +70,7 @@ class Game:
             if shot.hit_target(self.opponent):
                 self.opponent.die()
                 self.player_shots.remove(shot)
-                self.score += 1  # Incrementa la puntuación
+                self.score += 5  # Incrementa la puntuación
                 self.spawn_new_opponent()  # Genera un nuevo oponente
 
         for shot in self.opponent_shots:
@@ -98,7 +98,12 @@ class Game:
             game_over_image = pygame.image.load('assets/you_win.png')
         else:
             game_over_image = pygame.image.load('assets/game_over.png')
+        
+        # Muestra la imagen de fin del juego
+        self.screen.fill((0, 0, 0))  # Fondo negro
         self.screen.blit(game_over_image, (self.width // 4, self.height // 4))
         pygame.display.flip()
-        pygame.time.wait(2000)
+        
+        # Espera 3 segundos antes de cerrar
+        pygame.time.wait(3000)
         self.is_running = False
