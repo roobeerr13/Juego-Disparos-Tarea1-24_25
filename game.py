@@ -16,7 +16,7 @@ class Game:
         self.opponent = Opponent(self)
         self.player_shots = []
         self.opponent_shots = []
-        self.score = 0  # Puntuación inicial
+        self.score = 0 
         self.ended = False
         self.font = pygame.font.Font(None, 36)
 
@@ -31,13 +31,13 @@ class Game:
 
             keys = pygame.key.get_pressed()
             mouse_pressed = pygame.mouse.get_pressed()  # Obtiene el estado de los botones del ratón
-            self.update(keys, mouse_pressed)  # Pasa las teclas y el ratón al método update
+            self.update(keys, mouse_pressed) 
             self.render()
             self.clock.tick(60)
 
     def update(self, keys, mouse_pressed):
         if not self.ended:
-            self.player.update(keys, mouse_pressed)  # Pasa las teclas y el ratón al jugador
+            self.player.update(keys, mouse_pressed) 
             self.opponent.update()
             for shot in self.player_shots:
                 shot.update()
@@ -46,11 +46,12 @@ class Game:
             self.check_collisions()
 
     def render(self):
-        self.screen.fill((0, 0, 0))  # Fondo negro
+        self.screen.fill((135, 206, 235))  # Fondo azul claro
         score_text = self.font.render(f'Score: {self.score}', True, (255, 255, 255))
-        lives_text = self.font.render(f'Lives: {self.player.lives}', True, (255, 255, 255))
+        lives_text = self.font.render(f'Lives: {max(self.player.lives, 0)}', True, (255, 255, 255))  # Evita valores negativos
         self.screen.blit(score_text, (10, 10))
         self.screen.blit(lives_text, (10, 50))
+        self.player.render_invulnerability_timer()  # Muestra el temporizador de invulnerabilidad
         self.player.render()
         self.opponent.render()
         for shot in self.player_shots:
@@ -60,13 +61,11 @@ class Game:
         pygame.display.flip()
 
     def check_collisions(self):
-        # Colisión entre jugador y oponente
         if self.player.collide(self.opponent):
             self.player.collide_with_opponent()
         if self.opponent.collide(self.player):
             self.opponent.collide_with_player()
 
-        # Colisiones entre disparos y oponentes
         for shot in self.player_shots:
             if shot.hit_target(self.opponent):
                 self.opponent.die()
@@ -74,18 +73,14 @@ class Game:
                 self.score += 1  # Incrementa la puntuación
                 self.spawn_new_opponent()  # Genera un nuevo oponente
 
-        # Colisiones entre disparos de oponentes y el jugador
         for shot in self.opponent_shots:
-            if shot.hit_target(self.player):
+            if shot.hit_target(self.player) and not self.player.invulnerable:  # Respeta la invulnerabilidad
                 self.player.die()
                 self.opponent_shots.remove(shot)
 
     def spawn_new_opponent(self):
-        """
-        Genera un nuevo oponente en una posición aleatoria.
-        """
-        x = random.randint(0, self.width - 50)  # Posición aleatoria dentro de los límites de la pantalla
-        y = random.randint(0, self.height // 2)  # Aparece en la mitad superior de la pantalla
+        x = random.randint(0, self.width - 50)  
+        y = 0 
         self.opponent = Opponent(self)
         self.opponent.x = x
         self.opponent.y = y
